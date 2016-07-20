@@ -1,5 +1,6 @@
 package com.allo.flickster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -127,6 +128,8 @@ public class MoviesActivity extends BaseActivity implements MoviesAdapter.OnMovi
     }
 
     private void goToMovieDetails(Movie movie) {
-
+        Intent intent = new Intent(this, MovieActivity.class);
+        intent.putExtra(MovieActivity.BUNDLE_MOVIE, movie);
+        startActivity(intent);
     }
 }

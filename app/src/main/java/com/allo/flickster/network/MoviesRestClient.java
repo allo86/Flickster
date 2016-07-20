@@ -16,16 +16,20 @@ public class MoviesRestClient {
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        if (params != null) {
-            params.put("api_key", MOVIES_API_KEY);
+        if (params == null) {
+            params = new RequestParams();
         }
+        params.put("api_key", MOVIES_API_KEY);
+
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        if (params != null) {
-            params.put("api_key", MOVIES_API_KEY);
+        if (params == null) {
+            params = new RequestParams();
         }
+        params.put("api_key", MOVIES_API_KEY);
+
         client.post(getAbsoluteUrl(url), params, responseHandler);
     }
 

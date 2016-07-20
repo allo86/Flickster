@@ -10,10 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.allo.flickster.model.Movie;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -77,6 +79,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         @BindView(R.id.iv_backdrop)
         ImageView ivBackdrop;
 
+        @BindView(R.id.pb_image)
+        ProgressBar pbImage;
+
         @BindView(R.id.tv_title)
         TextView tvTitle;
 
@@ -132,13 +137,40 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
             this.tvTitle.setText(movie.getTitle());
             this.tvOverview.setText(movie.getOverview());
+
+            this.pbImage.setVisibility(View.VISIBLE);
+
             if (ivPoster != null) {
                 ivPoster.setImageDrawable(null);
-                Picasso.with(view.getContext()).load(movie.getPosterUrl(ivPoster.getMeasuredWidth())).into(ivPoster);
+                //Picasso.with(view.getContext()).load(movie.getPosterUrl(ivPoster.getMeasuredWidth())).into(ivPoster);
+                Picasso.with(view.getContext()).load(movie.getPosterUrl(ivPoster.getMeasuredWidth())).fit()
+                        .into(ivPoster, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                pbImage.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
             }
             if (ivBackdrop != null) {
                 ivBackdrop.setImageDrawable(null);
-                Picasso.with(view.getContext()).load(movie.getBackdropUrl(ivBackdrop.getMeasuredWidth())).into(ivBackdrop);
+                //Picasso.with(view.getContext()).load(movie.getBackdropUrl(ivBackdrop.getMeasuredWidth())).into(ivBackdrop);
+                Picasso.with(view.getContext()).load(movie.getBackdropUrl(ivBackdrop.getMeasuredWidth())).fit()
+                        .into(ivBackdrop, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                pbImage.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
             }
         }
     }

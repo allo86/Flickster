@@ -14,39 +14,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iv_poster"
+        <RelativeLayout
+            android:id="@+id/poster_container"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:ignore="ContentDescription" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_poster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="ContentDescription" />
+
+            <ProgressBar
+                android:id="@+id/pb_image"
+                style="@android:style/Widget.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/iv_poster"
             android:layout_marginEnd="@dimen/movies_list_horizontal_margin"
             android:layout_marginLeft="@dimen/movies_list_horizontal_margin"
             android:layout_marginRight="@dimen/movies_list_horizontal_margin"
             android:layout_marginStart="@dimen/movies_list_horizontal_margin"
-            android:layout_toRightOf="@+id/iv_poster">
+            android:layout_toEndOf="@+id/poster_container"
+            android:layout_toRightOf="@+id/poster_container">
 
             <TextView
                 android:id="@+id/tv_title"
+                style="@style/movies_list_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="The Legend of Tarzan"
                 android:layout_marginBottom="@dimen/movies_list_vertical_margin"
-                style="@style/movies_list_title"/>
+                tools:text="The Legend of Tarzan" />
 
             <TextView
                 android:id="@+id/tv_overview"
+                style="@style/movies_list_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_title"
                 android:ellipsize="end"
                 android:maxLines="@integer/movies_list_description_max_lines"
-                style="@style/movies_list_description"
                 tools:text="Tarzan, having acclimated to life in London, is called back to his former home in the jungle to investigate the activities at a mining encampment." />
 
         </RelativeLayout>

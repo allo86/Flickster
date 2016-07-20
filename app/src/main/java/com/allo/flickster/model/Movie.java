@@ -3,15 +3,21 @@ package com.allo.flickster.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
+ * Movie
+ * <p/>
  * Created by ALLO on 18/7/16.
  */
 public class Movie implements Parcelable {
+
+    private Long movieId;
 
     private String title;
 
@@ -21,24 +27,51 @@ public class Movie implements Parcelable {
 
     private String backdropPath;
 
-    protected Movie() {
+    private Double averageRating;
 
+    private String homepage;
+
+    private ArrayList<ProductionCompanies> productionCompanies;
+
+    private ArrayList<Video> videos;
+
+    protected Movie() {
+        averageRating = 0D;
+        productionCompanies = new ArrayList<>();
+        videos = new ArrayList<>();
     }
 
     public Movie(JSONObject jsonObject) throws JSONException {
         this();
 
+        if (jsonObject.has("id")) setMovieId(jsonObject.getLong("id"));
         if (jsonObject.has("title")) setTitle(jsonObject.getString("title"));
         if (jsonObject.has("overview")) setOverview(jsonObject.getString("overview"));
         if (jsonObject.has("poster_path")) setPosterPath(jsonObject.getString("poster_path"));
         if (jsonObject.has("backdrop_path")) setBackdropPath(jsonObject.getString("backdrop_path"));
+        if (jsonObject.has("vote_average")) setAverageRating(jsonObject.getDouble("vote_average"));
+        if (jsonObject.has("homepage")) setHomepage(jsonObject.getString("homepage"));
+
+        if (jsonObject.has("production_countries")) {
+            JSONArray jsonProductionCountries = jsonObject.getJSONArray("production_countries");
+            for (int i = 0; i < jsonProductionCountries.length(); i++) {
+                productionCompanies.add(new ProductionCompanies(jsonProductionCountries.getJSONObject(i)));
+            }
+        }
     }
 
     protected Movie(Parcel in) {
+        this();
+
+        movieId = in.readLong();
         title = in.readString();
         overview = in.readString();
         posterPath = in.readString();
         backdropPath = in.readString();
+        averageRating = in.readDouble();
+        homepage = in.readString();
+
+        in.readTypedList(productionCompanies, ProductionCompanies.CREATOR);
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -52,6 +85,14 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public Long getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
+    }
 
     public String getTitle() {
         return title;
@@ -85,6 +126,38 @@ public class Movie implements Parcelable {
         this.backdropPath = backdropPath;
     }
 
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
+    }
+
+    public ArrayList<ProductionCompanies> getProductionCompanies() {
+        return productionCompanies;
+    }
+
+    public void setProductionCompanies(ArrayList<ProductionCompanies> productionCompanies) {
+        this.productionCompanies = productionCompanies;
+    }
+
+    public ArrayList<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(ArrayList<Video> videos) {
+        this.videos = videos;
+    }
+
     public String getPosterUrl(int width) {
         return String.format(Locale.getDefault(), "https://image.tmdb.org/t/p/w%d/%s", width, getPosterPath());
     }
@@ -100,9 +173,13 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(movieId);
         dest.writeString(title);
         dest.writeString(overview);
         dest.writeString(posterPath);
         dest.writeString(backdropPath);
+        dest.writeDouble(averageRating);
+        dest.writeString(homepage);
+        dest.writeTypedList(productionCompanies);
     }
 }
