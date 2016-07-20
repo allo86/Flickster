@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="movies_list_title">
+        <item name="android:textSize">@dimen/movies_list_title_font_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="movies_list_description">
+        <item name="android:textSize">@dimen/movies_list_description_font_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

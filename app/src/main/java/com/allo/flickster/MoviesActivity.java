@@ -10,7 +10,6 @@ import com.allo.flickster.model.Movie;
 import com.allo.flickster.network.MoviesRestClientImplementation;
 import com.allo.flickster.network.callback.LatestMoviesCallback;
 import com.allo.flickster.network.model.Error;
-import com.allo.flickster.utils.ui.DividerItemDecoration;
 import com.allo.flickster.utils.ui.EndlessRecyclerViewScrollListener;
 import com.allo.flickster.utils.ui.LinearLayoutManager;
 
@@ -60,7 +59,7 @@ public class MoviesActivity extends BaseActivity implements MoviesAdapter.OnMovi
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, null, false, true));
+        //mRecyclerView.addItemDecoration(new DividerItemDecoration(this, null, false, true));
 
         mAdapter = new MoviesAdapter(new ArrayList<Movie>(), this);
         mRecyclerView.setAdapter(mAdapter);
