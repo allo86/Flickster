@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -112,7 +113,7 @@ public class MovieActivity extends BaseActivity {
                 @Override
                 public void onSuccess(ArrayList<Video> videos) {
                     movie.setVideos(videos);
-                    showMovieVideo(videos.get(0));
+                    showMovieVideo();
                     showMovieData();
                 }
 
@@ -126,16 +127,20 @@ public class MovieActivity extends BaseActivity {
         }
     }
 
-    private void showMovieVideo(final Video video) {
-        if ("YouTube".equals(video.getSite())) {
+    private void showMovieVideo() {
+        if (movie.hasYouTubeVideos()) {
             YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
             youTubePlayerFragment.initialize("AIzaSyAsG6oMoSX4w-IhjaeVrBxIieniRVdzQqI", new YouTubePlayer.OnInitializedListener() {
                 @Override
                 public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
                     if (!wasRestored) {
                         YPlayer = player;
-                        //YPlayer.setFullscreen(true);
-                        YPlayer.loadVideo(video.getKey());
+                        ArrayList<String> keys = new ArrayList<>();
+                        for (Video video : movie.getVideos()) {
+                            if ("YouTube".equals(video.getSite())) keys.add(video.getKey());
+                        }
+                        Log.d(TAG_LOG, "youtube videos: " + keys.size());
+                        YPlayer.cueVideos(keys);
                         YPlayer.play();
                     }
                 }
@@ -155,7 +160,6 @@ public class MovieActivity extends BaseActivity {
         tvDescription.setText(movie.getOverview());
         mRatingBar.setRating(movie.getAverageRating().floatValue() / 2);
 
-        //mFragmentContainer.setVisibility(View.INVISIBLE);
         mRatingBar.setVisibility(View.VISIBLE);
         mIvBackdrop.setVisibility(View.VISIBLE);
         tvDescription.setVisibility(View.VISIBLE);

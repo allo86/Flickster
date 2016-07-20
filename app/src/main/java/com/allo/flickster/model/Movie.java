@@ -166,6 +166,13 @@ public class Movie implements Parcelable {
         return String.format(Locale.getDefault(), "https://image.tmdb.org/t/p/w%d/%s", width, getBackdropPath());
     }
 
+    public boolean hasYouTubeVideos() {
+        for (Video video : videos) {
+            if ("YouTube".equals(video.getSite())) return true;
+        }
+        return false;
+    }
+
     @Override
     public int describeContents() {
         return 0;
