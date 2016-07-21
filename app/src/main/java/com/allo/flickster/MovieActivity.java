@@ -2,11 +2,11 @@ package com.allo.flickster;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.AppCompatRatingBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.allo.flickster.base.BaseActivity;
@@ -36,7 +36,7 @@ public class MovieActivity extends BaseActivity {
     FrameLayout mFragmentContainer;
 
     @BindView(R.id.rating_bar)
-    AppCompatRatingBar mRatingBar;
+    RatingBar mRatingBar;
 
     @BindView(R.id.iv_backdrop)
     ImageView mIvBackdrop;
@@ -81,9 +81,6 @@ public class MovieActivity extends BaseActivity {
     }
 
     private void initializeUI() {
-        //Drawable progress = mRatingBar.getProgressDrawable();
-        //DrawableCompat.setTint(progress, ContextCompat.getColor(this, R.color.colorPrimary));
-
         mFragmentContainer.setVisibility(View.INVISIBLE);
         mRatingBar.setVisibility(View.INVISIBLE);
         mIvBackdrop.setVisibility(View.INVISIBLE);
@@ -103,24 +100,28 @@ public class MovieActivity extends BaseActivity {
     }
 
     private void checkIfVideo() {
+        /*
         if (movie.getAverageRating().compareTo(5D) >= 0D) {
-            // Check if movie has videos
-            MoviesRestClientImplementation.getMovieVideos(movie.getMovieId(), new MovieVideosCallback() {
-                @Override
-                public void onSuccess(ArrayList<Video> videos) {
-                    movie.setVideos(videos);
-                    showMovieVideo();
-                    showMovieData();
-                }
+        */
+        // Check if movie has videos
+        MoviesRestClientImplementation.getMovieVideos(movie.getMovieId(), new MovieVideosCallback() {
+            @Override
+            public void onSuccess(ArrayList<Video> videos) {
+                movie.setVideos(videos);
+                showMovieVideo();
+                showMovieData();
+            }
 
-                @Override
-                public void onError(Error error) {
-                    showMovieData();
-                }
-            });
+            @Override
+            public void onError(Error error) {
+                showMovieData();
+            }
+        });
+        /*
         } else {
             showMovieData();
         }
+        */
     }
 
     private void showMovieVideo() {
@@ -135,8 +136,13 @@ public class MovieActivity extends BaseActivity {
                         for (Video video : movie.getVideos()) {
                             if ("YouTube".equals(video.getSite())) keys.add(video.getKey());
                         }
-                        YPlayer.cueVideos(keys);
-                        YPlayer.play();
+                        if (movie.getAverageRating().compareTo(5D) > 0) {
+                            // Play videos automatically
+                            YPlayer.loadVideos(keys);
+                        } else {
+                            // Load videos but do not play automatically
+                            YPlayer.cueVideos(keys);
+                        }
                     }
                 }
 

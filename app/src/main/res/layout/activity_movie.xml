@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             tools:ignore="ContentDescription" />
 
-        <android.support.v7.widget.AppCompatRatingBar
+        <RatingBar
             android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
