@@ -25,14 +25,18 @@
             android:layout_height="wrap_content"
             tools:ignore="ContentDescription" />
 
-        <RatingBar
+        <android.support.v7.widget.AppCompatRatingBar
             android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:isIndicator="true"
             android:max="5"
-            android:stepSize="0.01" />
+            android:progressBackgroundTint="@color/yellow"
+            android:progressTint="@color/yellow"
+            android:secondaryProgressTint="@color/yellow"
+            android:stepSize="0.01"
+            android:tint="@color/yellow" />
 
         <TextView
             android:id="@+id/tv_description"

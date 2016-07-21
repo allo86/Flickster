@@ -1,16 +1,13 @@
 package com.allo.flickster;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.allo.flickster.base.BaseActivity;
@@ -40,7 +37,7 @@ public class MovieActivity extends BaseActivity {
     FrameLayout mFragmentContainer;
 
     @BindView(R.id.rating_bar)
-    RatingBar mRatingBar;
+    AppCompatRatingBar mRatingBar;
 
     @BindView(R.id.iv_backdrop)
     ImageView mIvBackdrop;
@@ -85,8 +82,8 @@ public class MovieActivity extends BaseActivity {
     }
 
     private void initializeUI() {
-        Drawable progress = mRatingBar.getProgressDrawable();
-        DrawableCompat.setTint(progress, ContextCompat.getColor(this, R.color.colorPrimary));
+        //Drawable progress = mRatingBar.getProgressDrawable();
+        //DrawableCompat.setTint(progress, ContextCompat.getColor(this, R.color.colorPrimary));
 
         mFragmentContainer.setVisibility(View.INVISIBLE);
         mRatingBar.setVisibility(View.INVISIBLE);
