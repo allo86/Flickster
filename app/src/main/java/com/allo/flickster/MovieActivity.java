@@ -3,7 +3,6 @@ package com.allo.flickster;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatRatingBar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -136,7 +135,6 @@ public class MovieActivity extends BaseActivity {
                         for (Video video : movie.getVideos()) {
                             if ("YouTube".equals(video.getSite())) keys.add(video.getKey());
                         }
-                        Log.d(TAG_LOG, "youtube videos: " + keys.size());
                         YPlayer.cueVideos(keys);
                         YPlayer.play();
                     }

@@ -13,6 +13,15 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="movies_list_title_popular" parent="movies_list_title">
+        <item name="android:textSize">@dimen/movies_list_title_popular_font_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">@dimen/movies_list_title_popular_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/light_gray</item>
+    </style>
+
     <style name="movies_list_description">
         <item name="android:textSize">@dimen/movies_list_description_font_size</item>
         <item name="android:textStyle">normal</item>

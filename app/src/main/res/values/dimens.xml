@@ -9,6 +9,8 @@
     <dimen name="movies_list_vertical_margin">4dp</dimen>
     <dimen name="movies_list_title_font_size">18sp</dimen>
     <dimen name="movies_list_description_font_size">16sp</dimen>
+    <dimen name="movies_list_title_popular_font_size">20sp</dimen>
+    <dimen name="movies_list_title_popular_padding">5dp</dimen>
 
     <!-- Movies details -->
     <dimen name="movies_details_rating_font_size">20sp</dimen>

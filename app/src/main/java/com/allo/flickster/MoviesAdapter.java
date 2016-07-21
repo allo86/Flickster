@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
  * <p/>
  * Created by ALLO on 18/7/16.
  */
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG_LOG = MoviesAdapter.class.getCanonicalName();
 
@@ -45,15 +45,39 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         this.mListener = listener;
     }
 
-    @Override
-    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movies, parent, false);
-        return new MovieViewHolder(view);
+    enum RowType {
+        REGULAR,
+        POPULAR
     }
 
     @Override
-    public void onBindViewHolder(MovieViewHolder holder, int position) {
-        holder.configureViewWithMovie(mMovies.get(position));
+    public int getItemViewType(int position) {
+        Movie movie = mMovies.get(position);
+        if (movie.getAverageRating().compareTo(5D) >= 0) {
+            return RowType.POPULAR.ordinal();
+        } else {
+            return RowType.REGULAR.ordinal();
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == RowType.POPULAR.ordinal()) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movies_popular, parent, false);
+            return new PopularMovieViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movies_regular, parent, false);
+            return new MovieViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof MovieViewHolder) {
+            ((MovieViewHolder) holder).configureViewWithMovie(mMovies.get(position));
+        } else if (holder instanceof PopularMovieViewHolder) {
+            ((PopularMovieViewHolder) holder).configureViewWithMovie(mMovies.get(position));
+        }
     }
 
     @Override
@@ -88,6 +112,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         @BindView(R.id.tv_overview)
         TextView tvOverview;
 
+        private int width;
+
         public MovieViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -105,7 +131,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             windowManager.getDefaultDisplay().getMetrics(metrics);
             if (ivPoster != null) {
                 Log.d(TAG_LOG, "Portrait");
-                int width = (int) (metrics.widthPixels * 0.5);
+                width = (int) (metrics.widthPixels * 0.5);
                 if (width > 780) {
                     width = 780;
                 } else if (width > 500) {
@@ -120,7 +146,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 ivPoster.setLayoutParams(new RelativeLayout.LayoutParams(width, (int) (width * 1.5)));
             } else if (ivBackdrop != null) {
                 Log.d(TAG_LOG, "Landscape");
-                int width = (int) (metrics.widthPixels * 0.75);
+                width = (int) (metrics.widthPixels * 0.75);
                 if (width > 1280) {
                     width = 1280;
                 } else if (width > 780) {
@@ -142,8 +168,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
             if (ivPoster != null) {
                 ivPoster.setImageDrawable(null);
-                //Picasso.with(view.getContext()).load(movie.getPosterUrl(ivPoster.getMeasuredWidth())).into(ivPoster);
-                Picasso.with(view.getContext()).load(movie.getPosterUrl(ivPoster.getMeasuredWidth())).fit()
+                Picasso.with(view.getContext()).load(movie.getPosterUrl(width)).fit()
                         .into(ivPoster, new Callback() {
                             @Override
                             public void onSuccess() {
@@ -158,8 +183,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             }
             if (ivBackdrop != null) {
                 ivBackdrop.setImageDrawable(null);
-                //Picasso.with(view.getContext()).load(movie.getBackdropUrl(ivBackdrop.getMeasuredWidth())).into(ivBackdrop);
-                Picasso.with(view.getContext()).load(movie.getBackdropUrl(ivBackdrop.getMeasuredWidth())).fit()
+                Picasso.with(view.getContext()).load(movie.getBackdropUrl(width)).fit()
                         .into(ivBackdrop, new Callback() {
                             @Override
                             public void onSuccess() {
@@ -172,6 +196,64 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                             }
                         });
             }
+        }
+    }
+
+    class PopularMovieViewHolder extends RecyclerView.ViewHolder {
+        private View view;
+
+        private Movie movie;
+
+        @BindView(R.id.iv_backdrop)
+        ImageView ivBackdrop;
+
+        @BindView(R.id.pb_image)
+        ProgressBar pbImage;
+
+        @BindView(R.id.tv_title)
+        TextView tvTitle;
+
+        public PopularMovieViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+
+            this.view = view;
+            this.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) mListener.didSelectMovie(movie);
+                }
+            });
+
+            ivBackdrop.post(new Runnable() {
+                @Override
+                public void run() {
+                    int width = ivBackdrop.getMeasuredWidth();
+                    int height = (int) (width * 0.56282);
+                    ivBackdrop.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+                }
+            });
+        }
+
+        public void configureViewWithMovie(Movie movie) {
+            this.movie = movie;
+
+            this.tvTitle.setText(movie.getTitle());
+
+            this.pbImage.setVisibility(View.VISIBLE);
+            ivBackdrop.setImageDrawable(null);
+            Picasso.with(view.getContext()).load(movie.getBackdropUrl(1280))
+                    .into(ivBackdrop, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pbImage.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
         }
     }
 
