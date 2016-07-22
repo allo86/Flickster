@@ -1,5 +1,6 @@
 package com.allo.flickster;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -83,11 +86,21 @@ public class MovieActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.movie, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Go back
-                this.finish();
+                onBackPressed();
+                return true;
+            case R.id.action_share:
+                share();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -193,6 +206,14 @@ public class MovieActivity extends BaseActivity {
 
         mIvBackdrop.setVisibility(View.VISIBLE);
         tvDescription.setVisibility(View.VISIBLE);
+    }
+
+    private void share() {
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_SUBJECT, movie.getTitle());
+        share.putExtra(Intent.EXTRA_TEXT, "https://www.themoviedb.org/movie/" + String.valueOf(movie.getMovieId()));
+        startActivity(Intent.createChooser(share, "Share this movie!"));
     }
 
     private void showLoadingDialog() {
