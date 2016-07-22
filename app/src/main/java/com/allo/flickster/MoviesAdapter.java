@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
  * Movies Adapter
@@ -168,7 +169,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             if (ivPoster != null) {
                 ivPoster.setImageDrawable(null);
-                Picasso.with(view.getContext()).load(movie.getPosterUrl(width)).fit()
+                Picasso.with(view.getContext()).load(movie.getPosterUrl(width))
+                        .transform(new RoundedCornersTransformation((int) ivPoster.getResources().getDimension(R.dimen.card_corner_radius), 0))
+                        .fit()
                         .into(ivPoster, new Callback() {
                             @Override
                             public void onSuccess() {
@@ -183,7 +186,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
             if (ivBackdrop != null) {
                 ivBackdrop.setImageDrawable(null);
-                Picasso.with(view.getContext()).load(movie.getBackdropUrl(width)).fit()
+                Picasso.with(view.getContext()).load(movie.getBackdropUrl(width))
+                        .transform(new RoundedCornersTransformation((int) ivBackdrop.getResources().getDimension(R.dimen.card_corner_radius), 0))
+                        .fit()
                         .into(ivBackdrop, new Callback() {
                             @Override
                             public void onSuccess() {
@@ -243,6 +248,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.pbImage.setVisibility(View.VISIBLE);
             ivBackdrop.setImageDrawable(null);
             Picasso.with(view.getContext()).load(movie.getBackdropUrl(1280))
+                    .transform(new RoundedCornersTransformation((int) ivBackdrop.getResources().getDimension(R.dimen.card_corner_radius), 0))
+                    .fit()
                     .into(ivBackdrop, new Callback() {
                         @Override
                         public void onSuccess() {
