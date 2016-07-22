@@ -33,4 +33,19 @@
         <item name="cardUseCompatPadding">true</item>
     </style>
 
+    <style name="movies_detail_rating">
+        <item name="android:textSize">@dimen/movies_detail_rating_font_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="movies_detail_release_date">
+        <item name="android:textSize">@dimen/movies_detail_release_date_font_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="movies_detail_description">
+        <item name="android:textSize">@dimen/movies_detail_description_font_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

@@ -1,12 +1,16 @@
 package com.allo.flickster;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.allo.flickster.base.BaseActivity;
@@ -22,6 +26,8 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 import icepick.Icepick;
 
 /**
@@ -36,15 +42,23 @@ public class MovieActivity extends BaseActivity {
     FrameLayout mFragmentContainer;
 
     @BindView(R.id.rating_bar)
-    RatingBar mRatingBar;
+    AppCompatRatingBar mRatingBar;
 
     @BindView(R.id.iv_backdrop)
     ImageView mIvBackdrop;
+
+    @BindView(R.id.tv_vote_count)
+    TextView tvVoteCount;
+
+    @BindView(R.id.tv_release_date)
+    TextView tvReleaseDate;
 
     @BindView(R.id.tv_description)
     TextView tvDescription;
 
     private YouTubePlayer YPlayer;
+
+    private ACProgressFlower mLoadingDialog;
 
     private Movie movie;
 
@@ -85,6 +99,12 @@ public class MovieActivity extends BaseActivity {
         mRatingBar.setVisibility(View.INVISIBLE);
         mIvBackdrop.setVisibility(View.INVISIBLE);
         tvDescription.setVisibility(View.INVISIBLE);
+
+        mLoadingDialog = new ACProgressFlower.Builder(this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getString(R.string.loading))
+                .fadeColor(Color.DKGRAY).build();
     }
 
     private void showData() {
@@ -100,9 +120,8 @@ public class MovieActivity extends BaseActivity {
     }
 
     private void checkIfVideo() {
-        /*
-        if (movie.getAverageRating().compareTo(5D) >= 0D) {
-        */
+        showLoadingDialog();
+
         // Check if movie has videos
         MoviesRestClientImplementation.getMovieVideos(movie.getMovieId(), new MovieVideosCallback() {
             @Override
@@ -110,18 +129,17 @@ public class MovieActivity extends BaseActivity {
                 movie.setVideos(videos);
                 showMovieVideo();
                 showMovieData();
+
+                hideLoadingDialog();
             }
 
             @Override
             public void onError(Error error) {
                 showMovieData();
+
+                hideLoadingDialog();
             }
         });
-        /*
-        } else {
-            showMovieData();
-        }
-        */
     }
 
     private void showMovieVideo() {
@@ -159,10 +177,33 @@ public class MovieActivity extends BaseActivity {
 
     private void showMovieData() {
         tvDescription.setText(movie.getOverview());
-        mRatingBar.setRating(movie.getAverageRating().floatValue() / 2);
+        tvVoteCount.setText(getString(R.string.vote_count, String.valueOf(movie.getVoteCount())));
+        tvReleaseDate.setText(getString(R.string.release_date, movie.getDate()));
 
+        try {
+            LayerDrawable stars = (LayerDrawable) mRatingBar.getProgressDrawable();
+            stars.getDrawable(2).setColorFilter(ContextCompat.getColor(mRatingBar.getContext(), R.color.yellow), PorterDuff.Mode.SRC_ATOP);
+            //stars.getDrawable(1).setColorFilter(ContextCompat.getColor(mRatingBar.getContext(), R.color.ultra_light_gray), PorterDuff.Mode.SRC_ATOP);
+            //stars.getDrawable(0).setColorFilter(ContextCompat.getColor(mRatingBar.getContext(), R.color.ultra_light_gray), PorterDuff.Mode.SRC_ATOP);
+        } catch (Exception ex) {
+            // TODO: Do something here?
+        }
+        mRatingBar.setRating(movie.getAverageRating().floatValue() / 2);
         mRatingBar.setVisibility(View.VISIBLE);
+
         mIvBackdrop.setVisibility(View.VISIBLE);
         tvDescription.setVisibility(View.VISIBLE);
+    }
+
+    private void showLoadingDialog() {
+        if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
+            mLoadingDialog.show();
+        }
+    }
+
+    private void hideLoadingDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
     }
 }

@@ -10,5 +10,6 @@
     <color name="black">#000000</color>
     <color name="yellow">#FFDD58</color>
     <color name="light_gray">#80111111</color>
+    <color name="ultra_light_gray">#EEEEEE</color>
 
 </resources>

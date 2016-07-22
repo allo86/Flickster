@@ -3,6 +3,8 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin_half">8dp</dimen>
+    <dimen name="activity_vertical_margin_half">8dp</dimen>
 
     <!-- Movies list -->
     <dimen name="movies_list_horizontal_margin">4dp</dimen>
@@ -13,7 +15,9 @@
     <dimen name="movies_list_title_popular_padding">5dp</dimen>
 
     <!-- Movies details -->
-    <dimen name="movies_details_rating_font_size">20sp</dimen>
+    <dimen name="movies_detail_rating_font_size">16sp</dimen>
+    <dimen name="movies_detail_release_date_font_size">18sp</dimen>
+    <dimen name="movies_detail_description_font_size">20sp</dimen>
 
     <!-- CardView -->
     <dimen name="card_corner_radius">4dp</dimen>

@@ -1,7 +1,11 @@
 package com.allo.flickster;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.allo.flickster.model.Movie;
+import com.allo.flickster.utils.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -218,6 +223,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @BindView(R.id.tv_title)
         TextView tvTitle;
 
+        @BindView(R.id.rating_bar)
+        AppCompatRatingBar ratingBar;
+
         public PopularMovieViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -229,6 +237,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     if (mListener != null) mListener.didSelectMovie(movie);
                 }
             });
+
+            try {
+                LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+                stars.getDrawable(2).setColorFilter(ContextCompat.getColor(ratingBar.getContext(), R.color.yellow), PorterDuff.Mode.SRC_ATOP);
+                stars.getDrawable(1).setColorFilter(ContextCompat.getColor(ratingBar.getContext(), R.color.ultra_light_gray), PorterDuff.Mode.SRC_ATOP);
+                stars.getDrawable(0).setColorFilter(ContextCompat.getColor(ratingBar.getContext(), R.color.ultra_light_gray), PorterDuff.Mode.SRC_ATOP);
+            } catch (Exception ex) {
+                // TODO: Do something here?
+            }
 
             ivBackdrop.post(new Runnable() {
                 @Override
@@ -244,6 +261,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.movie = movie;
 
             this.tvTitle.setText(movie.getTitle());
+            this.ratingBar.setRating(Utils.round(movie.getAverageRating().floatValue() / 2, 2));
 
             this.pbImage.setVisibility(View.VISIBLE);
             ivBackdrop.setImageDrawable(null);
