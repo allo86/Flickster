@@ -50,7 +50,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-- There is an strange problem using the YouTubePlayerSupportFragment. If the movie is shown in fullscreen, after the video is dismissed, the activity remains in landscape mode. It was necessary to force portrait mode righ after the video exists fullscreen mode.
+- There is an strange problem using the YouTubePlayerSupportFragment. If the movie is shown in fullscreen, after the video is dismissed, the activity remains in landscape mode and, even if i rotate the device, the landscape mode still remains. It was necessary to force portrait mode righ after the video exists fullscreen mode. Also, in other emulator, after the fullscreen mode is dismissed, the container activity was completely restarted (onCreate was called)
 - The RatingBar color is set up in code. The xml properties did not had the desired effect in some Android versions.
 
 ## Open-source libraries used
