@@ -1,6 +1,8 @@
 package com.allo.flickster;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -60,6 +63,7 @@ public class MovieActivity extends BaseActivity {
     TextView tvDescription;
 
     private YouTubePlayer YPlayer;
+    private boolean fullScreen;
 
     private ACProgressFlower mLoadingDialog;
 
@@ -104,6 +108,33 @@ public class MovieActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fullScreen) {
+            if (YPlayer != null) YPlayer.setFullscreen(false);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int orientation = newConfig.orientation;
+
+        switch (orientation) {
+
+            case Configuration.ORIENTATION_LANDSCAPE:
+                Log.d("orientation", "lanscape");
+                break;
+
+            case Configuration.ORIENTATION_PORTRAIT:
+                Log.d("orientation", "portrait");
+                break;
+
         }
     }
 
@@ -163,16 +194,35 @@ public class MovieActivity extends BaseActivity {
                 public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
                     if (!wasRestored) {
                         YPlayer = player;
+                        //YPlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
+                        YPlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
+                            @Override
+                            public void onFullscreen(boolean b) {
+                                fullScreen = b;
+                                if (!fullScreen) {
+                                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                }
+                            }
+                        });
+
                         ArrayList<String> keys = new ArrayList<>();
                         for (Video video : movie.getVideos()) {
                             if ("YouTube".equals(video.getSite())) keys.add(video.getKey());
                         }
+                        /*
                         if (movie.getAverageRating().compareTo(5D) > 0) {
                             // Play videos automatically
                             YPlayer.loadVideos(keys);
                         } else {
                             // Load videos but do not play automatically
                             YPlayer.cueVideos(keys);
+                        }
+                        */
+                        // Play videos automatically
+                        YPlayer.loadVideos(keys);
+                        if (movie.getAverageRating().compareTo(5D) > 0) {
+                            YPlayer.setFullscreen(true);
                         }
                     }
                 }
