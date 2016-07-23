@@ -68,6 +68,7 @@ public class MovieActivity extends BaseActivity {
 
     private YouTubePlayer YPlayer;
     private boolean fullScreen;
+    private boolean previouslyLoaded;
 
     private ACProgressFlower mLoadingDialog;
 
@@ -90,6 +91,9 @@ public class MovieActivity extends BaseActivity {
 
         Icepick.restoreInstanceState(this, savedInstanceState);
 
+        if (savedInstanceState != null) {
+            previouslyLoaded = true;
+        }
         showData();
     }
 
@@ -160,9 +164,17 @@ public class MovieActivity extends BaseActivity {
         setTitle(movie.getTitle());
 
         // Show background image
-        Picasso.with(this).load(movie.getPosterUrl(780))
-                .fit()
-                .into(ivPoster);
+        ivPoster.post(new Runnable() {
+            @Override
+            public void run() {
+                int width = ivPoster.getMeasuredWidth();
+                int height = ivPoster.getMeasuredHeight();
+                Picasso.with(MovieActivity.this).load(movie.getPosterUrl(780))
+                        .resize(width, height)
+                        .centerCrop()
+                        .into(ivPoster);
+            }
+        });
 
         // Check if need to show video
         checkIfVideo();
@@ -230,7 +242,7 @@ public class MovieActivity extends BaseActivity {
                         */
                         // Play videos automatically
                         YPlayer.loadVideos(keys);
-                        if (movie.getAverageRating().compareTo(5D) > 0) {
+                        if (movie.getAverageRating().compareTo(5D) > 0 && !previouslyLoaded) {
                             YPlayer.setFullscreen(true);
                         }
                     }
