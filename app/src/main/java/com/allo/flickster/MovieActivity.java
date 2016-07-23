@@ -28,6 +28,7 @@ import com.allo.flickster.network.model.Error;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,9 @@ import icepick.Icepick;
 public class MovieActivity extends BaseActivity {
 
     public static final String BUNDLE_MOVIE = "BUNDLE_MOVIE";
+
+    @BindView(R.id.iv_poster)
+    ImageView ivPoster;
 
     @BindView(R.id.fragment_container)
     FrameLayout mFragmentContainer;
@@ -154,6 +158,11 @@ public class MovieActivity extends BaseActivity {
     private void showData() {
         // Show title
         setTitle(movie.getTitle());
+
+        // Show background image
+        Picasso.with(this).load(movie.getPosterUrl(780))
+                .fit()
+                .into(ivPoster);
 
         // Check if need to show video
         checkIfVideo();

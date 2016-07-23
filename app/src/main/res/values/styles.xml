@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/yellow</item>
     </style>
 
-    <style name="movies_list_title">
+    <style name="movies_list_title" parent="base_text_view">
         <item name="android:textSize">@dimen/movies_list_title_font_size</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -22,7 +22,7 @@
         <item name="android:background">@drawable/rounded_corners_light_gray_background</item>
     </style>
 
-    <style name="movies_list_description">
+    <style name="movies_list_description" parent="base_text_view">
         <item name="android:textSize">@dimen/movies_list_description_font_size</item>
         <item name="android:textStyle">normal</item>
     </style>
@@ -33,17 +33,21 @@
         <item name="cardUseCompatPadding">true</item>
     </style>
 
-    <style name="movies_detail_rating">
+    <style name="base_text_view">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="movies_detail_rating" parent="base_text_view">
         <item name="android:textSize">@dimen/movies_detail_rating_font_size</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="movies_detail_release_date">
+    <style name="movies_detail_release_date" parent="base_text_view">
         <item name="android:textSize">@dimen/movies_detail_release_date_font_size</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="movies_detail_description">
+    <style name="movies_detail_description" parent="base_text_view">
         <item name="android:textSize">@dimen/movies_detail_description_font_size</item>
         <item name="android:textStyle">normal</item>
     </style>
